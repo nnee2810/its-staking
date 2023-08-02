@@ -19,13 +19,12 @@ import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { useStakingContractStore } from "store/stakingContract"
-import { parseEther } from "utils/parseEther"
-import { formatEther } from "viem"
+import { formatEther, parseEther } from "viem"
 import { useAccount } from "wagmi"
 import { waitForTransaction } from "wagmi/actions"
 
 interface FormValues {
-  amount: number
+  amount: string
 }
 
 export default function StakeToken() {
@@ -33,7 +32,7 @@ export default function StakeToken() {
   const [isLoading, setIsLoading] = useBoolean()
   const { acceptedToken } = useStakingContractStore()
   const account = useAccount()
-  const allowenceToken = useTokenContractAllowance({
+  const allowanceToken = useTokenContractAllowance({
     address: acceptedToken,
     args: [account.address!, import.meta.env.VITE_STAKING_CONTRACT_ADDRESS],
     enabled: false,
@@ -41,7 +40,7 @@ export default function StakeToken() {
   const stakeToken = useStakingContractStakeErc20()
   const form = useForm<FormValues>({
     defaultValues: {
-      amount: 0,
+      amount: "",
     },
     resolver: joiResolver(
       Joi.object<FormValues, true>({
@@ -51,8 +50,8 @@ export default function StakeToken() {
   })
 
   const handleSubmit = form.handleSubmit(async ({ amount }: FormValues) => {
-    if (!acceptedToken || !allowenceToken.data) return
-    if (parseEther(amount) > allowenceToken.data)
+    if (!acceptedToken || !allowanceToken.data) return
+    if (parseEther(amount) > allowanceToken.data)
       return toast.error("Amount exceeds token staking")
     try {
       setIsLoading.on()
@@ -93,18 +92,17 @@ export default function StakeToken() {
             <ModalContent>
               <ModalHeader>Stake token</ModalHeader>
               <ModalBody className="space-y-2">
-                {allowenceToken.isLoading ? (
+                {allowanceToken.isLoading ? (
                   <Skeleton h="2rem" />
                 ) : (
-                  allowenceToken.data !== undefined && (
+                  allowanceToken.data !== undefined && (
                     <>
                       <div className="flex items-start gap-2">
                         <Field
                           variant="text"
-                          type="number"
                           name="amount"
                           label={`Amount (available: ${formatEther(
-                            allowenceToken.data
+                            allowanceToken.data
                           )})`}
                         />
                         <div
@@ -112,7 +110,7 @@ export default function StakeToken() {
                           onClick={() =>
                             form.setValue(
                               "amount",
-                              Number(formatEther(allowenceToken.data || 0n))
+                              formatEther(allowanceToken.data || 0n)
                             )
                           }
                         >
@@ -130,7 +128,7 @@ export default function StakeToken() {
                 <Button
                   type="submit"
                   colorScheme="teal"
-                  isDisabled={!allowenceToken.data}
+                  isDisabled={!allowanceToken.data}
                   isLoading={isLoading}
                 >
                   Submit

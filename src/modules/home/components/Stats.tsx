@@ -1,4 +1,4 @@
-import AllowenceToken from "./AllowenceToken"
+import AllowanceToken from "./AllowanceToken"
 import NtfStaking from "./NtfStaking"
 import PendingNftWithdrawal from "./PendingNftWithdrawal"
 import PendingTokenWithdrawal from "./PendingTokenWithdrawal"
@@ -10,7 +10,7 @@ export default function Stats() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-8 p-4 border rounded-md">
         <TokenStaking />
         <PendingTokenWithdrawal />
-        <AllowenceToken />
+        <AllowanceToken />
       </div>
       <div className="grid grid-cols-2 p-4 border rounded-md">
         <NtfStaking />

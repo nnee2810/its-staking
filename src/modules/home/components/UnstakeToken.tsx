@@ -17,15 +17,14 @@ import Joi from "joi"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { parseEther } from "utils/parseEther"
-import { formatEther } from "viem"
+import { formatEther, parseEther } from "viem"
 import { waitForTransaction } from "wagmi/actions"
 
 interface UnstakeTokenProps {
   data: bigint
 }
 interface FormValues {
-  amount: number
+  amount: string
 }
 
 export default function UnstakeToken({ data }: UnstakeTokenProps) {
@@ -33,7 +32,7 @@ export default function UnstakeToken({ data }: UnstakeTokenProps) {
   const [isLoading, setIsLoading] = useBoolean()
   const form = useForm<FormValues>({
     defaultValues: {
-      amount: 0,
+      amount: "",
     },
     resolver: joiResolver(
       Joi.object<FormValues, true>({
@@ -93,14 +92,13 @@ export default function UnstakeToken({ data }: UnstakeTokenProps) {
                 <div className="flex items-start gap-2">
                   <Field
                     variant="text"
-                    type="number"
                     name="amount"
                     label={`Amount (available: ${formatEther(data)})`}
                   />
                   <div
                     className="mt-7 text-xs text-gray-600 font-bold cursor-pointer"
                     onClick={() =>
-                      form.setValue("amount", Number(formatEther(data || 0n)))
+                      form.setValue("amount", formatEther(data || 0n))
                     }
                   >
                     MAX

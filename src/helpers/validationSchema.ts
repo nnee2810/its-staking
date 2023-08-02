@@ -1,17 +1,23 @@
 import Joi from "joi"
-import { parseEther } from "utils/parseEther"
+import { parseEther } from "viem"
 
 export function bigIntSchema(name: string, size: number = 256) {
-  return Joi.number()
+  return Joi.string()
     .label(name)
     .required()
-    .greater(0)
-    .custom((value, helper) => {
-      if (parseEther(value) > BigInt(2) ** BigInt(size) - BigInt(1))
-        return helper.error("any.invalid")
+    .custom((value: string, helpers) => {
+      if (isNaN(Number(value)))
+        return helpers.message({
+          custom: "{{#label}} must be a number",
+        })
+      const convertedValue = parseEther(value)
+      if (
+        convertedValue <= 0n ||
+        convertedValue > BigInt(2) ** BigInt(size) - BigInt(1)
+      )
+        return helpers.message({
+          custom: "{{#label}} is out of range",
+        })
       return value
-    })
-    .messages({
-      "any.invalid": "{{#label}} is out of range",
     })
 }

@@ -21,7 +21,7 @@ import { useStakingContractStore } from "store/stakingContract"
 import { waitForTransaction } from "wagmi/actions"
 
 interface FormValues {
-  id: number
+  id: string
 }
 
 export default function StakeNft() {
@@ -29,7 +29,7 @@ export default function StakeNft() {
   const [isLoading, setIsLoading] = useBoolean()
   const form = useForm<FormValues>({
     defaultValues: {
-      id: 1,
+      id: "",
     },
     resolver: joiResolver(
       Joi.object<FormValues, true>({
@@ -40,12 +40,12 @@ export default function StakeNft() {
   const { acceptedNft } = useStakingContractStore()
   const stakeNft = useStakingContractStakeErc721()
 
-  const handleSubmit = form.handleSubmit(async (values: FormValues) => {
+  const handleSubmit = form.handleSubmit(async ({ id }: FormValues) => {
     if (!acceptedNft) return
     try {
       setIsLoading.on()
       const { hash } = await stakeNft.writeAsync({
-        args: [BigInt(values.id)],
+        args: [BigInt(id)],
       })
       await waitForTransaction({
         hash,
@@ -81,7 +81,7 @@ export default function StakeNft() {
             <ModalContent>
               <ModalHeader>Stake NFT</ModalHeader>
               <ModalBody>
-                <Field variant="text" type="number" name="id" label="ID" />
+                <Field variant="text" name="id" label="ID" />
               </ModalBody>
               <ModalFooter className="gap-1">
                 <Button isDisabled={isLoading} onClick={setIsOpen.off}>

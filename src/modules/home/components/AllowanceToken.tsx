@@ -9,33 +9,33 @@ import { formatEther } from "viem"
 import { useAccount } from "wagmi"
 import ApproveToken from "./ApproveToken"
 
-export default function AllowenceToken() {
+export default function AllowanceToken() {
   const { acceptedToken } = useStakingContractStore()
   const account = useAccount()
-  const allowenceToken = useTokenContractAllowance({
+  const allowanceToken = useTokenContractAllowance({
     address: acceptedToken,
     args: [account.address!, import.meta.env.VITE_STAKING_CONTRACT_ADDRESS],
   })
 
   useStakingContractStakedErc20Event({
     listener() {
-      allowenceToken.refetch()
+      allowanceToken.refetch()
     },
   })
   useTokenContractApprovalEvent({
     address: acceptedToken,
     listener() {
-      allowenceToken.refetch()
+      allowanceToken.refetch()
     },
   })
 
   return (
     <Stat>
-      <StatLabel>Allowence token</StatLabel>
-      {allowenceToken.isLoading && <Skeleton height="2rem" />}
-      {allowenceToken.data !== undefined && (
+      <StatLabel>Allowance token</StatLabel>
+      {allowanceToken.isLoading && <Skeleton height="2rem" />}
+      {allowanceToken.data !== undefined && (
         <>
-          <StatNumber>{String(formatEther(allowenceToken.data))}</StatNumber>
+          <StatNumber>{String(formatEther(allowanceToken.data))}</StatNumber>
           <div className="mt-2 flex gap-1">
             <ApproveToken />
           </div>

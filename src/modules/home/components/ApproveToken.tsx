@@ -18,11 +18,11 @@ import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { useStakingContractStore } from "store/stakingContract"
-import { parseEther } from "utils/parseEther"
+import { parseEther } from "viem"
 import { waitForTransaction } from "wagmi/actions"
 
 interface FormValues {
-  amount: number
+  amount: string
 }
 
 export default function ApproveToken() {
@@ -30,7 +30,7 @@ export default function ApproveToken() {
   const [isLoading, setIsLoading] = useBoolean()
   const form = useForm<FormValues>({
     defaultValues: {
-      amount: 0,
+      amount: "",
     },
     resolver: joiResolver(
       Joi.object<FormValues, true>({
@@ -88,12 +88,7 @@ export default function ApproveToken() {
             <ModalContent>
               <ModalHeader>Approve token</ModalHeader>
               <ModalBody>
-                <Field
-                  variant="text"
-                  type="number"
-                  name="amount"
-                  label="Amount"
-                />
+                <Field variant="text" name="amount" label="Amount" />
               </ModalBody>
               <ModalFooter className="gap-1">
                 <Button isDisabled={isLoading} onClick={setIsOpen.off}>

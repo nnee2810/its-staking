@@ -35,7 +35,6 @@ export default function TokenStaking() {
           <StatNumber>{String(formatEther(tokenStaking.data))}</StatNumber>
           <div className="mt-2 flex gap-1">
             <StakeToken />
-
             <UnstakeToken data={tokenStaking.data} />
           </div>
         </>
