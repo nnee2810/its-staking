@@ -22,7 +22,10 @@ export const wagmiConfig = createConfig({
 })
 export const ethereumClient = new EthereumClient(wagmiConfig, chains)
 export function getWriteContractError(error: unknown) {
-  if (error instanceof ContractFunctionExecutionError) return error.shortMessage
-  if (error instanceof TransactionExecutionError) return error.shortMessage
+  if (
+    error instanceof ContractFunctionExecutionError ||
+    error instanceof TransactionExecutionError
+  )
+    return error.shortMessage
   return "Excution error"
 }

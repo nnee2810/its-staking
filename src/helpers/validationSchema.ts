@@ -7,7 +7,7 @@ export function bigIntSchema(name: string, size: number = 256) {
     .required()
     .greater(0)
     .custom((value, helper) => {
-      if (parseEther(value) > BigInt(2 ** size - 1))
+      if (parseEther(value) > BigInt(2) ** BigInt(size) - BigInt(1))
         return helper.error("any.invalid")
       return value
     })

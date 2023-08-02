@@ -43,9 +43,6 @@ export default function UnstakeNft({ data }: UnstakeNftProps) {
   }
 
   useEffect(() => {
-    if (!isOpen) checkBoxGroup.setValue([])
-  }, [isOpen, checkBoxGroup])
-  useEffect(() => {
     if (!data.length) setIsOpen.off()
   }, [data, setIsOpen])
 
@@ -62,6 +59,7 @@ export default function UnstakeNft({ data }: UnstakeNftProps) {
       <Modal
         isOpen={isOpen}
         onClose={setIsOpen.off}
+        onCloseComplete={checkBoxGroup.setValue.bind(null, [])}
         closeOnEsc={false}
         closeOnOverlayClick={false}
       >

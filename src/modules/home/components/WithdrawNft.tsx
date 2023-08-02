@@ -47,9 +47,6 @@ export default function WithdrawNft({ data }: WithdrawNftProps) {
   }
 
   useEffect(() => {
-    if (!isOpen) checkBoxGroup.setValue([])
-  }, [isOpen, checkBoxGroup])
-  useEffect(() => {
     if (!data.length) setIsOpen.off()
   }, [data, setIsOpen])
 
@@ -65,6 +62,7 @@ export default function WithdrawNft({ data }: WithdrawNftProps) {
       <Modal
         isOpen={isOpen}
         onClose={setIsOpen.off}
+        onCloseComplete={checkBoxGroup.setValue.bind(null, [])}
         closeOnEsc={false}
         closeOnOverlayClick={false}
       >
